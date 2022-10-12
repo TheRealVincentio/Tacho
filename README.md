@@ -1,9 +1,11 @@
-# BoxFall
+# Tacho
 
-Avoid the falling boxes
+Change gears and disappear ... with the occasional stop sign
 
 To Do
-- Adjust # of boxes
-- Anims for player
+- [ ] Numbers on Dial
+- [ ] Shift
+- [ ] Stop
+- [ ] Points
 
-## [Playable Link](https://mperina11.github.io/BoxFall/)
+## [FIX ME]()
