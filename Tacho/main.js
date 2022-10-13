@@ -6,89 +6,6 @@ Shift and Stop!
 
 characters = [
 `
-  ll
-ll  ll
-ll  ll
-  ll
-`,`
- ll
- ll
- ll
- ll
-`,`
-ll
-  ll
-ll
-llll
-`,`
-ll
-  ll
-ll
-  ll
-ll
-`,`
-ll ll
-lllll
-   ll
-`,`
-llll
-ll
-  ll
-ll
-`,`
-  ll
-ll
-l l
-l  ll
-llll
-`,`
-llllll
-    ll
-  ll
-ll
-ll
-`,`
-  ll
-ll  ll
-  ll
-ll  ll
-  ll
-`,`
-  ll
-ll  ll
-ll  ll
-  ll
-ll
-ll
-`,`
-ll    ll
-ll  ll  ll
-ll  ll  ll
-ll    ll
-`,`
-ll  ll
-ll  ll
-ll  ll
-`,`
-ll  ll
-ll    ll
-ll  ll
-ll  llll
-`,`
-ll  ll
-ll    ll
-ll  ll
-ll    ll
-ll  ll
-`,`
-ll  ll ll
-ll  lllll
-ll     ll
-`,`
-ll  llll
-ll  ll
-ll    ll
-ll  ll
 `
 ];
 
@@ -101,15 +18,19 @@ const tacX = G.WIDTH/2;
 const tacY = G.HEIGHT/1.5;
 const r_blue_red = 50;
 const r_num = 40;
-const characts = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "o", "p", "q"];
+const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
+// const numbers_9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+// const numbers_15 = ["11", "12", "13", "14", "15"];
 let points_blue = [];
 let points_red = [];
 let points_num = [];
+// let points_num_9 = [];
+// let points_num_15 = [];
 let needle_index = 0;
 let redline_time = 0;
 let points_bckrnd = [];
 let r_bckrnd = 55;
-// let engine_broken = false;
+let over;
 
 options = {
 	viewSize: {x: G.WIDTH, y: G.HEIGHT},
@@ -124,17 +45,44 @@ options = {
 
 function update() {
 	if (!ticks) {
+
+        over = false;
+
         // points for numbers
         for (let angle = 160; angle <= 380; angle += 14.66) {
 
             let rad = (angle * Math.PI)/180;
-            let x = tacX + (r_num * cos(rad));
-            let y = tacY + (r_num * sin(rad));
+            let x = (tacX - 3) + (r_num * cos(rad));
+            let y = tacY -1 + (r_num * sin(rad));
             points_num.push({
                 x: x,
                 y: y
             })
         }
+
+        // // points for #s 0-9
+        // for (let angle = 160; angle <= 297.5; angle += 13.75) {
+
+        //     let rad = (angle * Math.PI)/180;
+        //     let x = (tacX - 3) + (r_num * cos(rad));
+        //     let y = (tacY - 2) + (r_num * sin(rad));
+        //     points_num_9.push({
+        //         x: x,
+        //         y: y
+        //     })
+        // }
+        // // points for #s 10-15
+        // for (let angle = 311.25; angle <= 366.25; angle += 13.75) {
+
+        //     let rad = (angle * Math.PI)/180;
+        //     let x = tacX + (r_num * cos(rad));
+        //     let y = tacY + (r_num * sin(rad));
+        //     points_num_15.push({
+        //         x: x,
+        //         y: y
+        //     })
+        // }
+
         // points for blue arc
         for (let angle = 160; angle <= 380; angle += 1) {
             
@@ -171,14 +119,49 @@ function update() {
         }
 	}   
 
+    // Redline gameover
+    if (redline_time >= 3) {
+        console.log("END");
+        redline_time = 0;
+        over = true;
+        play("explosion");
+        end();
+    }
+
+    if (over) {
+        console.log("HERE");
+    }
+
     // draw numbers
     for (let i = 0; i < points_num.length; i++) {        
         color("blue");
         if (i >= 11) {
             color("red");
         }
-        char(characts[i], points_num[i].x, points_num[i].y);
-     }
+        // char(characts[i], points_num[i].x, points_num[i].y);
+        text(numbers[i], points_num[i].x, points_num[i].y);
+    }
+
+    // // draw numbers 0-9
+    // for (let i = 0; i < points_num_9.length; i++) {        
+    //     color("blue");
+    //     // if (i >= 11) {
+    //     //     color("red");
+    //     // }
+    //     // char(characts[i], points_num[i].x, points_num[i].y);
+    //     text(numbers_9[i], points_num_9[i].x, points_num_9[i].y);
+    // }
+    // // draw numbers 10-15
+    // for (let i = 0; i < points_num_15.length; i++) {        
+    //     color("blue");
+    //     if (i >= 11) {
+    //         color("red");
+    //     }
+    //     // char(characts[i], points_num[i].x, points_num[i].y);
+    //     text(numbers_15[i], points_num_15[i].x, points_num_15[i].y);
+    // }
+
+
 
     // draw blue arc
     for (let i = 0; i < points_blue.length; i++) {
@@ -198,9 +181,9 @@ function update() {
     }
    
     // Move needle
-    if (ticks % 30 == 0) { 
+    if (ticks % 5 == 0) { 
         if (needle_index <= 90) {
-            needle_index += 5;
+            needle_index += 7;
         } 
         else if (needle_index <= 130) {
             needle_index += 4;
@@ -209,8 +192,11 @@ function update() {
             needle_index += 2;
         }
         
+        // if (needle_index >= points_blue.length) {
+        //     needle_index = 0; // loop back to start
+        // }
         if (needle_index >= points_blue.length) {
-            needle_index = 0; // loop back to start
+            needle_index = Math.floor(Math.random() * (points_blue.length - points_blue.length - 5) + points_blue.length-10);
         }
     }
     // draw needle
@@ -256,13 +242,6 @@ function update() {
     } else {
         redline_time = 0;
         console.log("redline_time zeroed");
-    }
-
-    // Redline gameover
-    if (redline_time >= 3) {
-        console.log("END");
-        play("explosion");
-        end();
-    }   
+    }    
 
 }
