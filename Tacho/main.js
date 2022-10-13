@@ -45,7 +45,7 @@ options = {
     captureCanvasScale: 2,
     seed: 1,
     isPlayingBgm: true,
-    isReplayEnabled: true,
+    isReplayEnabled: false,
     theme: "dark"
 };
 
@@ -101,11 +101,26 @@ function update() {
         this.needle_index = 0;
         this.redline_time = 0;
         
+        this.stop = 60 * rndi(5,10);
+        this.time = 0;
+        this.stoptime =0;
 	}   
+
+    //increment time
+    if(this.stoptime==0){this.time++}
+    if(this.time == this.stop){
+        color("red");
+        text("STOP",G.WIDTH/2 -10,5);
+        this.stoptime++;
+        if(this.stoptime==150){
+            this.time = 0;
+            this.stop = 60 * rndi(1,6);
+            this.stoptime = 0;
+        } 
+    }
 
     // Redline gameover
     if (this.redline_time >= 3) {
-        console.log("END");
         this.redline_time = 0;
         play("explosion");
         end();
@@ -135,13 +150,13 @@ function update() {
     // Move needle
     if (ticks % 5 == 0) { 
         if (this.needle_index <= 90) {
-            this.needle_index += 7;
+            this.needle_index += Math.floor(14*difficulty);
         } 
         else if (this.needle_index <= 130) {
-            this.needle_index += 4;
+            this.needle_index += Math.floor(8*difficulty);
         }
         else {
-            this.needle_index += 2;
+            this.needle_index += Math.floor(4*difficulty);
         }
         
         if (this.needle_index >= blue.length) {
@@ -154,14 +169,18 @@ function update() {
 
     // Shift
     if (input.isJustPressed) {
+        if(this.stoptime > 20 && this.stoptime < 150){
+            play("explosion");
+            end();
+        }
         play("powerUp");
         if (this.needle_index <= 40) { // 3:42,  6:90, 9:130, 12:170, RED:165+
             this.needle_index = Math.floor(Math.random() * (20 - 1) + 1);
-            addScore(3);          
+            addScore(0);          
         }
         else if (this.needle_index <= 90) {
             this.needle_index = Math.floor(Math.random() * (40 - 20) + 20);
-            addScore(3);
+            addScore(1);
         }
         else if (this.needle_index <= 130) {
             this.needle_index = Math.floor(Math.random() * (65 - 40) + 40);
@@ -169,11 +188,11 @@ function update() {
         }
         else if (this.needle_index <= 160) {
             this.needle_index = Math.floor(Math.random() * (80 - 65) + 65);
-            addScore(3);
+            addScore(5);
         }
         else {
             this.needle_index = Math.floor(Math.random() * (100 - 65) + 65);
-            addScore(1);
+            addScore(7);
         }
     }
 
