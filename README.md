@@ -1,6 +1,7 @@
 # Tacho
 
-Change gears and disappear ... with the occasional stop sign
-rawr?
+Press to shift and stop when it says so.<br>
+Don't stay in the red for to long.
 
-## [FIX ME]()
+
+## [Play here](https://therealvincentio.github.io/Tacho/)
