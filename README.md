@@ -1,5 +1,7 @@
 # Tacho
 
+![screenshot](./Images/screenshot)
+
 Press to shift and stop when it says so.<br>
 Don't stay in the red for to long.
 
